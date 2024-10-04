@@ -2,9 +2,9 @@
 
 import util from 'util'
 import fs from 'fs'
-import puppeteer from 'puppeteer'
 
 async function pdf(url, output, opt) {
+    let puppeteer = await import('puppeteer')
     let bowser = await puppeteer.launch()
     let page = await bowser.newPage()
 
@@ -28,7 +28,7 @@ async function pdf(url, output, opt) {
 }
 
 function urlise(s) {
-    return (/^https?:/.test(s)) ? s : 'file://' + fs.realpathSync(s)
+    return (/^(https?|file):/.test(s)) ? s : 'file://' + fs.realpathSync(s)
 }
 
 function err(...msg) { console.error(...msg); process.exit(1) }
@@ -42,6 +42,6 @@ let args = util.parseArgs({
 })
 
 if ( !(args.positionals[0] && args.positionals[1]))
-    err('Usage: html2pdf URL output.pdf')
+    err('Usage: html2pdf [-w unit] [-h unit] URL output.pdf')
 
 pdf(args.positionals[0], args.positionals[1], args.values)
