@@ -1,0 +1,21 @@
+#!/usr/bin/make -f
+
+font := monospace
+
+$(if $(and $(i),$(o)),,$(error Usage: xterm-xhtml-to-svg i=1.xhtml o=1.svg))
+__dir__ := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+
+$(o): $(i).dirty.svg; svgcleaner --quiet $< $@
+
+%.nokogiri.xhtml: $(i)
+	ruby -rnokogiri -e 'd = Nokogiri.XML(STDIN.read); d.css("#vt100 > pre").first["style"] = "font-family: '$(call se,$(font))'; line-height: 1.2"; puts d.to_xml' < $< > $@
+
+%.uncropped.pdf: %.nokogiri.xhtml; $(__dir__)/html2pdf $< $@
+
+%.pdf: %.uncropped.pdf
+	inkscape --actions "select-all;fit-canvas-to-selection" $< -o $@
+
+%.dirty.svg: %.pdf; pdf2svg $< $@
+
+se = '$(subst ','\'',$1)'
+.INTERMEDIATE: $(i).dirty.svg

@@ -1,0 +1,47 @@
+#!/usr/bin/env node
+
+import util from 'util'
+import fs from 'fs'
+import puppeteer from 'puppeteer'
+
+async function pdf(url, output, opt) {
+    let bowser = await puppeteer.launch()
+    let page = await bowser.newPage()
+
+    let print_settings = Object.assign({
+        path: output,
+        printBackground: true,
+        width: 1920,
+        height: 1080,
+    }, opt)
+
+    await page.emulateMediaType('screen')
+    await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36')
+    try {
+        await page.goto(urlise(url), { waitUntil: 'networkidle0' })
+        await page.pdf(print_settings)
+    } catch (e) {
+        err('Error:', e.message)
+    }
+
+    await bowser.close()
+}
+
+function urlise(s) {
+    return (/^https?:/.test(s)) ? s : 'file://' + fs.realpathSync(s)
+}
+
+function err(...msg) { console.error(...msg); process.exit(1) }
+
+let args = util.parseArgs({
+    options: {
+        width: { type: 'string', short: 'w' },
+        height: { type: 'string', short: 'h' },
+    },
+    allowPositionals: true
+})
+
+if ( !(args.positionals[0] && args.positionals[1]))
+    err('Usage: html2pdf URL output.pdf')
+
+pdf(args.positionals[0], args.positionals[1], args.values)
