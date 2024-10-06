@@ -1,23 +1,35 @@
 #!/usr/bin/make -f
 
 font := monospace
+font-embed := 2
 w := 1920
 h := 1080
 
 $(if $(and $(i),$(o)),,$(error Usage: xterm-xhtml-to-svg i=1.xhtml o=1.svg))
 __dir__ := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+dvisvgm := dvisvgm
 
+ifeq ($(font-embed),1)
+$(o):
+else
 $(o): $(i).dirty.svg; svgcleaner --quiet $< $@
+endif
 
 %.nokogiri.xhtml: $(i)
 	ruby -rnokogiri -e 'd = Nokogiri.XML(STDIN.read); d.css("#vt100 > pre").first["style"] = "font-family: '$(call se,$(font))'; line-height: 1.2"; puts d.to_xml' < $< > $@
 
 %.uncropped.pdf: %.nokogiri.xhtml; $(__dir__)/html2pdf -w $(w) -h $(h) $< $@
 
-%.pdf: %.uncropped.pdf
-	inkscape -n 1 --actions "select-all;fit-canvas-to-selection" $< -o $@
+%.pdf: %.uncropped.pdf; $(pdf-crop)
 
-%.dirty.svg: %.pdf; pdftocairo -svg $< $@
+ifeq ($(font-embed),0)
+%.dirty.svg: %.uncropped.pdf; $(pdf-crop)
+else ifeq ($(font-embed),1)
+%.svg: %.pdf; $(dvisvgm) -v0 -s -P -f woff2,autohint --optimize=all $< > $@
+else
+%.dirty.svg: %.pdf; $(dvisvgm) -v0 -s -P --no-fonts $< > $@
+endif
 
+pdf-crop = inkscape -n 1 --actions "select-all;fit-canvas-to-selection" $< -o $@
 se = '$(subst ','\'',$1)'
 .INTERMEDIATE: $(i).dirty.svg
