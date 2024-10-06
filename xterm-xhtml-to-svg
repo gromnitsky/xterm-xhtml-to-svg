@@ -25,9 +25,9 @@ endif
 ifeq ($(font-embed),0)
 %.dirty.svg: %.uncropped.pdf; $(pdf-crop)
 else ifeq ($(font-embed),1)
-%.svg: %.pdf; $(dvisvgm) -v0 -s -P -f woff2,autohint --optimize=all $< > $@
+%.svg: %.pdf; $(dvisvgm) -s -P -f woff2,autohint --optimize=all $< > $@
 else
-%.dirty.svg: %.pdf; $(dvisvgm) -v0 -s -P --no-fonts $< > $@
+%.dirty.svg: %.pdf; $(dvisvgm) -s -P --no-fonts $< > $@
 endif
 
 pdf-crop = inkscape -n 1 --actions "select-all;fit-canvas-to-selection" $< -o $@

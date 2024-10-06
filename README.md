@@ -34,7 +34,7 @@ could be an issue.</li>
 *dvisvgm* at least v3.4.1 is required, unless `font-embed=0`.
 
 ~~~
-$ sudo dnf install inkscape
+$ sudo dnf install inkscape mupdf
 $ gem install nokogiri
 $ cargo install svgcleaner
 $ npm i
