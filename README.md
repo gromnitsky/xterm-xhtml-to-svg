@@ -35,7 +35,6 @@ could be an issue.</li>
 
 ~~~
 $ sudo dnf install inkscape mupdf
-$ gem install nokogiri
 $ cargo install svgcleaner
 $ npm i
 ~~~

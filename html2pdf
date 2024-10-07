@@ -19,6 +19,7 @@ async function pdf(url, output, opt) {
     await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36')
     try {
         await page.goto(urlise(url), { waitUntil: 'networkidle0' })
+        if (opt.css) await page.addStyleTag({content: opt.css})
         await page.pdf(print_settings)
     } catch (e) {
         err('Error:', e.message)
@@ -37,11 +38,12 @@ let args = util.parseArgs({
     options: {
         width: { type: 'string', short: 'w' },
         height: { type: 'string', short: 'h' },
+        css: { type: 'string', short: 'c' },
     },
     allowPositionals: true
 })
 
 if ( !(args.positionals[0] && args.positionals[1]))
-    err('Usage: html2pdf [-w unit] [-h unit] URL output.pdf')
+    err('Usage: html2pdf [-w unit] [-h unit] [-c css] URL output.pdf')
 
 pdf(args.positionals[0], args.positionals[1], args.values)
