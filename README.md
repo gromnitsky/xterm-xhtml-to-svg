@@ -13,25 +13,25 @@ SVG from an Xterm screen dump.
 ### Options
 
 <table>
-<tr><td style="width: 25%">`font=STRING`</td><td>[`monospace`] use a different font name, e.g., `font='Roboto Mono Light'`</td></tr>
+<tr><td>font=STRING</td><td>monospace</td><td>use a different font name, e.g., <code>font='Roboto Mono Light'</code></td></tr>
 
-<tr><td>`font-embed=INT`</td><td>
-[`2`]. One of:
+<tr><td style="white-space: nowrap;">font-embed=INT</td><td>2</td><td>
+One of:
 <ul>
-<li>`0`: no embedding; `monospace` fallback is added automatically;</li>
-<li>`1`: embed fonts in woff2 format; buggy, use with caution; works only with web browsers;</li>
-<li>`2`: convert text to path; renders everywhere, but the resulting file size
-could be an issue.</li>
+<li>0: no embedding; <code>monospace</code> fallback is added automatically;</li>
+<li>1: embed fonts in woff2 format; works only with web browsers (at
+the time of writing, webkit-based have minor rendering issues);</li>
+<li>2: convert text to path; renders everywhere.</li>
 </ul>
 </td></tr>
 
-<tr><td>`w=INT`</td><td>[`1920`] width of a viewport</td></tr>
-<tr><td>`h=INT`</td><td>[`1080`] height</td></tr>
+<tr><td>w=INT</td><td>1920</td><td>width of a viewport</td></tr>
+<tr><td>h=INT</td><td>1080</td><td>height</td></tr>
 </table>
 
 ## Install
 
-*dvisvgm* at least v3.4.1 is required, unless `font-embed=0`.
+*dvisvgm* at least v3.4.2 is required, unless `font-embed=0`.
 
 ~~~
 $ sudo dnf install inkscape mupdf
