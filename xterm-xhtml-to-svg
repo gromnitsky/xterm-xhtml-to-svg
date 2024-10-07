@@ -21,12 +21,15 @@ endif
 %.pdf: %.uncropped.pdf; $(pdf-crop)
 
 ifeq ($(font-embed),0)
-%.dirty.svg: %.uncropped.pdf; $(pdf-crop)
+%.nofont.svg: %.uncropped.pdf; $(pdf-crop)
 else ifeq ($(font-embed),1)
 %.svg: %.pdf; $(dvisvgm) -s -P -f woff2,autohint --optimize=all $< > $@
 else
 %.dirty.svg: %.pdf; $(dvisvgm) -s -P --no-fonts $< > $@
 endif
+
+%.dirty.svg: %.nofont.svg
+	ruby -rnokogiri -e 'd = Nokogiri.XML(STDIN.read); d.css("tspan").each {|t| t["style"] = t["style"].sub(ARGV[0], ARGV[1] + ", monospace") }; puts d.to_xml' "`fc-match -f %{family} $(call se,$(font))`" $(call se,$(font)) < $< > $@
 
 pdf-crop = inkscape -n 1 --actions "select-all;fit-canvas-to-selection" $< -o $@
 se = '$(subst ','\'',$1)'

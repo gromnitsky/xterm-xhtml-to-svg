@@ -18,7 +18,7 @@ SVG from an Xterm screen dump.
 <tr><td>`font-embed=INT`</td><td>
 [`2`]. One of:
 <ul>
-<li>`0`: no embedding; not recommended unless you know what are you doing;</li>
+<li>`0`: no embedding; `monospace` fallback is added automatically;</li>
 <li>`1`: embed fonts in woff2 format; buggy, use with caution; works only with web browsers;</li>
 <li>`2`: convert text to path; renders everywhere, but the resulting file size
 could be an issue.</li>
@@ -35,6 +35,7 @@ could be an issue.</li>
 
 ~~~
 $ sudo dnf install inkscape mupdf
+$ gem install nokogiri # only for font-embed=0
 $ cargo install svgcleaner
 $ npm i
 ~~~
