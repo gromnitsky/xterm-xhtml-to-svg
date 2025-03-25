@@ -4,6 +4,7 @@ font := monospace
 font-embed := 2
 w := 1920
 h := 1080
+lh := 1.2
 
 $(if $(and $(i),$(o)),,$(error Usage: xterm-xhtml-to-svg i=1.xhtml o=1.svg))
 __dir__ := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -16,7 +17,7 @@ $(o): $(i).dirty.svg; svgcleaner --quiet $< $@
 endif
 
 %.uncropped.pdf: $(i)
-	$(__dir__)/html2pdf -w $(w) -h $(h) -c '#vt100 > pre { font-family: '$(call se,$(font))'; line-height: 1.2; }' $< $@
+	$(__dir__)/html2pdf -w $(w) -h $(h) -c '#vt100 > pre { font-family: '$(call se,$(font))'; line-height: $(lh); }' $< $@
 
 %.pdf: %.uncropped.pdf; $(pdf-crop)
 

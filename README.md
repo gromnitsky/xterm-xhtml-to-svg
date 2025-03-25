@@ -27,6 +27,8 @@ the time of writing, webkit-based have minor rendering issues);</li>
 
 <tr><td>w=INT</td><td>1920</td><td>width of a viewport</td></tr>
 <tr><td>h=INT</td><td>1080</td><td>height</td></tr>
+
+<tr><td>lh=FLOAT</td><td>1.2</td><td>line height</td></tr>
 </table>
 
 ## Install
